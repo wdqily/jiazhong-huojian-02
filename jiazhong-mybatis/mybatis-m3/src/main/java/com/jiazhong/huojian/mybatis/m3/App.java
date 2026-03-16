@@ -1,7 +1,9 @@
 package com.jiazhong.huojian.mybatis.m3;
 
 
+import com.jiazhong.huojian.mybatis.m3.been.Dept;
 import com.jiazhong.huojian.mybatis.m3.been.Emp;
+import com.jiazhong.huojian.mybatis.m3.mapper.DeptMapper;
 import com.jiazhong.huojian.mybatis.m3.mapper.EmpMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -28,10 +30,23 @@ public class App {
         EmpMapper mapper = sessions.getMapper(EmpMapper.class);
         List<Emp> emps = mapper.findEmpByDeptNo(10);
         System.out.println(emps);
+        sessions.close();
     }
 
+    private static void c() {
+        InputStream inputStream = Emp.class.getClassLoader().getResourceAsStream("config.xml");
+        SqlSessionFactory ssf = new SqlSessionFactoryBuilder().build(inputStream);
+        SqlSession sessions = ssf.openSession();
+        DeptMapper mapper = sessions.getMapper(DeptMapper.class);
+        Dept dept = mapper.findDeptById2(10);
+        System.out.println(dept);
+        sessions.close();
+
+    }
+
+
     public static void main(String[] args) {
-        b();
+        c();
 
     }
 }
