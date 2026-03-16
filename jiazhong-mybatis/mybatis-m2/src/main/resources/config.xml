@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <!--输出日志到控制台中-->
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+    <!--分页插件拦截器-->
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+            <!--reasonable：分页合理化参数，默认值为false。
+                  当该参数设置为 true 时，pageNum<=0 时会查询第一页，
+                  pageNum>pages（超过总数时），会查询最后一页。
+                  默认false 时，直接根据参数进行查询。-->
+            <property name="reasonable" value="true"/>
+        </plugin>
+    </plugins>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <!--分别书写驱动类、网址、账号和密码 注意网址中&使用&amp;代替-->
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/jiazhong_2026_1"/>
+                <property name="username" value="root"/>
+                <property name="password" value="20050217"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <package name="com.jiazhong.huojian.mybatis.m2.mapper"/>
+    </mappers>
+</configuration>
