@@ -15,7 +15,25 @@ public class App {
         System.out.println(da2);
     }
 
+    private static void b() {
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        Object db = context.getBean("db");
+        System.out.println(db);
+    }
+
+    private static void c() {
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        Object dc = context.getBean("dc");
+        System.out.println(dc);
+    }
+
+    private static void d() {
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        Object dd = context.getBean("dd");
+        System.out.println(dd);
+    }
+
     public static void main(String[] args) {
-        a();
+        d();
     }
 }

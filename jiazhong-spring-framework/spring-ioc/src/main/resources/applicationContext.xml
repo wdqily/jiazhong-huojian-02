@@ -2,6 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--产生对象-->
     <!--
         产生DemoA的对象
         bean：代表一个对象
@@ -9,4 +10,48 @@
             class：完整类名
     -->
     <bean id="da2" class="com.jiazhong.huojian.spring.framework.ioc.xml.DemoA"/>
+    <bean id="db" class="com.jiazhong.huojian.spring.framework.ioc.xml.DemoB">
+        <!--给对象的属性进行赋值操作 通过setting赋值-->
+        <property name="id">
+            <value>1</value>
+        </property>
+        <property name="gender" value="男"/>
+        <property name="name" value="qq"/>
+        <property name="weight" value="88.8"/>
+    </bean>
+    <bean id="dc" class="com.jiazhong.huojian.spring.framework.ioc.xml.DemoC">
+        <!--给集合赋值-->
+        <property name="shuzu">
+            <array>
+                <value>11</value>
+                <value>111</value>
+                <value>1111</value>
+            </array>
+        </property>
+        <property name="youxujihe">
+            <list>
+                <value>aa</value>
+                <value>bb</value>
+            </list>
+        </property>
+        <property name="wuxujihe">
+            <set>
+                <value>ww</value>
+                <value>qq</value>
+            </set>
+        </property>
+        <property name="hashjihe">
+            <map>
+                <entry key="a" value="zzz"/>
+                <entry key="b" value="rrr"/>
+                <entry key="c" value="hhh"/>
+            </map>
+        </property>
+    </bean>
+    <bean id="dd" class="com.jiazhong.huojian.spring.framework.ioc.xml.DemoD">
+        <!--将da2对象赋给dd对象的a属性-->
+        <property name="a" ref="da2"/>
+        <property name="b" ref="db"/>
+        <property name="c" ref="dc"/>
+    </bean>
 </beans>
