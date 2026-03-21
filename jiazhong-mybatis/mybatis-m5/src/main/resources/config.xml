@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <!--输出日志到控制台中-->
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+        <!--开启全局二级缓存-->
+        <setting name="cacheEnabled" value="true"/>
+    </settings>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <!--分别书写驱动类、网址、账号和密码 注意网址中&使用&amp;代替-->
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/jiazhong_2026_1"/>
+                <property name="username" value="root"/>
+                <property name="password" value="20050217"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <!--引入的资源文件-->
+        <package name="com.jiazhong.huojian.mybatis.m5.Mapper"/>
+    </mappers>
+</configuration>
