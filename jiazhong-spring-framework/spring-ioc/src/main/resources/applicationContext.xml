@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--
+        产生DemoA的对象
+        bean：代表一个对象
+            id：对象名
+            class：完整类名
+    -->
+    <bean id="da2" class="com.jiazhong.huojian.spring.framework.ioc.xml.DemoA"/>
+</beans>
