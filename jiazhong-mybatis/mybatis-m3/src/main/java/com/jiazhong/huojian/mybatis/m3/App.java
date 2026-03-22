@@ -41,12 +41,9 @@ public class App {
         Dept dept = mapper.findDeptById2(10);
         System.out.println(dept);
         sessions.close();
-
     }
-
-
     public static void main(String[] args) {
-        c();
+        b();
 
     }
 }

@@ -4,15 +4,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.jiazhong.huojian</groupId>
-    <artifactId>jiazhong-huojian-02</artifactId>
+    <!--让当前项目继承boot-parent项目-->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.4.5</version>
+        <relativePath/>
+    </parent>
+    <groupId>com.jiazhong.huojian.spring.boot</groupId>
+    <artifactId>jiazhong-spring-boot</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>jiazhong-jdbc</module>
-        <module>jiazhong-mybatis</module>
-        <module>jiazhong-spring-framework</module>
-        <module>jiazhong-spring-boot</module>
+        <module>boot-ioc-mybatis</module>
     </modules>
 
     <properties>

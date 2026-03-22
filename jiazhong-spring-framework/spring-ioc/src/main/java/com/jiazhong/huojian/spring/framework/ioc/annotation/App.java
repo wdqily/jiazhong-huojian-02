@@ -47,8 +47,7 @@ public class App {
         System.out.println(bean);
 
     }
-
     public static void main(String[] args) {
-        d2();
+        d1();
     }
 }
