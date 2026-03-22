@@ -20,22 +20,35 @@ public class App {
         System.out.println(bean1);
     }
 
-    private static void c() {
+    private static void c1() {
         ApplicationContext context = new AnnotationConfigApplicationContext("com.jiazhong.huojian.spring.framework.ioc.annotation");
         DemoC bean = context.getBean(DemoC.class);
         System.out.println(bean);
 
     }
 
-    private static void d() {
+    private static void c2() {
         ApplicationContext context = new AnnotationConfigApplicationContext("com.jiazhong.huojian.spring.framework.ioc.annotation");
         DemoD bean = context.getBean(DemoD.class);
         System.out.println(bean);
 
     }
 
+    private static void d1() {
+        ApplicationContext context = new AnnotationConfigApplicationContext("com.jiazhong.huojian.spring.framework.ioc.annotation");
+        DemoE bean = context.getBean(DemoE.class);
+        System.out.println(bean);
+
+    }
+
+    private static void d2() {
+        ApplicationContext context = new AnnotationConfigApplicationContext("com.jiazhong.huojian.spring.framework.ioc.annotation");
+        DemoF bean = context.getBean(DemoF.class);
+        System.out.println(bean);
+
+    }
 
     public static void main(String[] args) {
-        d();
+        d2();
     }
 }
