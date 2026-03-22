@@ -9,7 +9,15 @@
             id：对象名
             class：完整类名
     -->
+    <!--通过setter方式给属性赋值-->
     <bean id="da2" class="com.jiazhong.huojian.spring.framework.ioc.xml.DemoA"/>
+    <bean id="da3" class="com.jiazhong.huojian.spring.framework.ioc.xml.DemoA" init-method="a"/>
+    <!--
+        单例和多例
+        默认是单例模式，就是IoC容器中就一个该对象
+        scope:singleton(单例)|prototype(多例)
+    -->
+    <bean id="da4" class="com.jiazhong.huojian.spring.framework.ioc.xml.DemoA" scope="prototype" init-method="a"/>
     <bean id="db" class="com.jiazhong.huojian.spring.framework.ioc.xml.DemoB">
         <!--给对象的属性进行赋值操作 通过setting赋值-->
         <property name="id">
@@ -54,4 +62,48 @@
         <property name="b" ref="db"/>
         <property name="c" ref="dc"/>
     </bean>
+    <!--通过构造器方式给属性赋值-->
+    <!--无参构造器-->
+    <bean id="de1" class="com.jiazhong.huojian.spring.framework.ioc.xml.DemoE">
+
+    </bean>
+    <!--调用有一个string参数构造器-->
+    <bean id="de2" class="com.jiazhong.huojian.spring.framework.ioc.xml.DemoE">
+        <constructor-arg index="0" value="qqq"/>
+    </bean>
+    <!--调用有一个demob参数构造器-->
+    <bean id="de3" class="com.jiazhong.huojian.spring.framework.ioc.xml.DemoE">
+        <constructor-arg name="demoB" ref="db" type="com.jiazhong.huojian.spring.framework.ioc.xml.DemoB"/>
+    </bean>
+    <bean id="de4" class="com.jiazhong.huojian.spring.framework.ioc.xml.DemoE">
+        <constructor-arg name="b">
+            <array>
+                <value>11</value>
+                <value>22</value>
+                <value>33</value>
+            </array>
+        </constructor-arg>
+        <constructor-arg name="c" value="666"/>
+    </bean>
+    <bean id="de5" class="com.jiazhong.huojian.spring.framework.ioc.xml.DemoE">
+        <constructor-arg name="a" value="ww"/>
+        <constructor-arg name="b">
+            <array>
+                <value>11</value>
+                <value>22</value>
+                <value>33</value>
+            </array>
+        </constructor-arg>
+        <constructor-arg name="c" value="777"/>
+        <constructor-arg name="demoB" ref="db" type="com.jiazhong.huojian.spring.framework.ioc.xml.DemoB"/>
+    </bean>
+    <!--
+        懒加载和勤加载问题
+        默认情况：勤加载模式，就是在IoC容器启动后会加载类并产生对象
+        设置类的对象为懒加载模式，就是这个类的对象在容器启动后并不会产生，只有在第一次使用时才产生
+        lazy-init：懒加载还是勤加载
+    -->
+    <bean id="df" class="com.jiazhong.huojian.spring.framework.ioc.xml.DemoF" lazy-init="true"/>
+
+
 </beans>
