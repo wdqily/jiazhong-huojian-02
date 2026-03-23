@@ -8,15 +8,15 @@
         代表一个查询方法
         id:方法名
     -->
-    <select id="findAll" resultType="com.jiazhong.huojian.mybatis.m1.been.Custom">
+    <select id="findAll" resultType="com.jiazhong.huojian.mybatis.m1.bean.Custom">
         <!--这里是SQL-->
         select * from custom
     </select>
-    <insert id="saveCustom" parameterType="com.jiazhong.huojian.mybatis.m1.been.Custom">
+    <insert id="saveCustom" parameterType="com.jiazhong.huojian.mybatis.m1.bean.Custom">
         insert into custom
         values (null, #{name}, #{city}, #{country})
     </insert>
-    <update id="updateCustom" parameterType="com.jiazhong.huojian.mybatis.m1.been.Custom">
+    <update id="updateCustom" parameterType="com.jiazhong.huojian.mybatis.m1.bean.Custom">
         update custom
         set name=#{name},
             city=#{city},

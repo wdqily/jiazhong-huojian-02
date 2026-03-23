@@ -1,7 +1,7 @@
 package com.jiazhong.huojian.jdbc.work.dao;
 
 import com.jiazhong.huojian.jdbc.oop.db.DBManager;
-import com.jiazhong.huojian.jdbc.work.been.Student;
+import com.jiazhong.huojian.jdbc.work.bean.Student;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

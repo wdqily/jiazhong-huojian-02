@@ -2,7 +2,7 @@ package com.jiazhong.huojian.mybatis.m2;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.jiazhong.huojian.mybatis.m2.been.Emp;
+import com.jiazhong.huojian.mybatis.m2.bean.Emp;
 import com.jiazhong.huojian.mybatis.m2.mapper.EmpMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;

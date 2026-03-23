@@ -1,6 +1,6 @@
 package com.jiazhong.huojian.mybatis.m3.mapper;
 
-import com.jiazhong.huojian.mybatis.m3.been.Dept;
+import com.jiazhong.huojian.mybatis.m3.bean.Dept;
 import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;

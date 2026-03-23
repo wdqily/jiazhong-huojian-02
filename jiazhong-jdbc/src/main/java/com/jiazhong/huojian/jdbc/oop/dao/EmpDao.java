@@ -1,6 +1,6 @@
 package com.jiazhong.huojian.jdbc.oop.dao;
 
-import com.jiazhong.huojian.jdbc.been.Emp;
+import com.jiazhong.huojian.jdbc.bean.Emp;
 import com.jiazhong.huojian.jdbc.oop.db.DBManager;
 
 import java.sql.Connection;

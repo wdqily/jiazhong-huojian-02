@@ -1,13 +1,11 @@
-package com.jiazhong.huojian.jdbc.been;
+package com.jiazhong.huojian.mybatis.m3.bean;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Emp {
+public class Emp implements Serializable {
     private Integer empNo;
     private String ename;
     private String job;
@@ -16,5 +14,6 @@ public class Emp {
     private Integer sal;
     private Integer comm;
     private Integer deptNo;
-
+    // 1. 记录员工的部门信息
+    private Dept dept;
 }

@@ -1,4 +1,4 @@
-package com.jiazhong.huojian.mybatis.m1.been;
+package com.jiazhong.huojian.mybatis.m1.bean;
 
 import lombok.Data;
 

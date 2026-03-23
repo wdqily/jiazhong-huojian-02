@@ -1,8 +1,8 @@
 package com.jiazhong.huojian.mybatis.m3;
 
 
-import com.jiazhong.huojian.mybatis.m3.been.Dept;
-import com.jiazhong.huojian.mybatis.m3.been.Emp;
+import com.jiazhong.huojian.mybatis.m3.bean.Dept;
+import com.jiazhong.huojian.mybatis.m3.bean.Emp;
 import com.jiazhong.huojian.mybatis.m3.mapper.DeptMapper;
 import com.jiazhong.huojian.mybatis.m3.mapper.EmpMapper;
 import org.apache.ibatis.session.SqlSession;

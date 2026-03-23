@@ -1,6 +1,6 @@
 package com.jiazhong.huojian.mybatis.m4.Mapper;
 
-import com.jiazhong.huojian.mybatis.m4.been.Emp;
+import com.jiazhong.huojian.mybatis.m4.bean.Emp;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

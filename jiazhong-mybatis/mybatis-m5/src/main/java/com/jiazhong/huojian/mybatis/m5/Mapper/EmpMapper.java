@@ -1,6 +1,6 @@
 package com.jiazhong.huojian.mybatis.m5.Mapper;
 
-import com.jiazhong.huojian.mybatis.m5.been.Emp;
+import com.jiazhong.huojian.mybatis.m5.bean.Emp;
 import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;

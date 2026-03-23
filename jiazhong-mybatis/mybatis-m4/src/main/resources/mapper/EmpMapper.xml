@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jiazhong.huojian.mybatis.m4.Mapper.EmpMapper">
-    <update id="update" parameterType="com.jiazhong.huojian.mybatis.m4.been.Emp">
+    <update id="update" parameterType="com.jiazhong.huojian.mybatis.m4.bean.Emp">
         update emp
         <set>
             <if test="ename!=null">
@@ -19,13 +19,13 @@
         where empno=#{empNo}
 
     </update>
-    <select id="find1" resultType="com.jiazhong.huojian.mybatis.m4.been.Emp">
+    <select id="find1" resultType="com.jiazhong.huojian.mybatis.m4.bean.Emp">
         select * from emp
         <if test="ename!=null">
             where ename like #{ename}
         </if>
     </select>
-    <select id="find2" resultType="com.jiazhong.huojian.mybatis.m4.been.Emp">
+    <select id="find2" resultType="com.jiazhong.huojian.mybatis.m4.bean.Emp">
         select * from emp
         <!---if-elese-->
         <choose>
@@ -37,7 +37,7 @@
             </otherwise>
         </choose>
     </select>
-    <select id="find3" resultType="com.jiazhong.huojian.mybatis.m4.been.Emp">
+    <select id="find3" resultType="com.jiazhong.huojian.mybatis.m4.bean.Emp">
         select * from emp
         <choose>
             <when test="sal>60000">
@@ -51,7 +51,7 @@
             </otherwise>
         </choose>
     </select>
-    <select id="find4" resultType="com.jiazhong.huojian.mybatis.m4.been.Emp">
+    <select id="find4" resultType="com.jiazhong.huojian.mybatis.m4.bean.Emp">
         <!--select * from emp
         <where>
             <if test="job!=null">
@@ -72,7 +72,7 @@
         </trim>
 
     </select>
-    <select id="find5" resultType="com.jiazhong.huojian.mybatis.m4.been.Emp">
+    <select id="find5" resultType="com.jiazhong.huojian.mybatis.m4.bean.Emp">
         select * from emp
         <where>
             <if test="job!=null">
@@ -83,7 +83,7 @@
             </if>
         </where>
     </select>
-    <select id="find6" resultType="com.jiazhong.huojian.mybatis.m4.been.Emp">
+    <select id="find6" resultType="com.jiazhong.huojian.mybatis.m4.bean.Emp">
         <bind name="abc" value="'%'+_parameter.getEname()+'%'"/>
         select * from emp
         where ename like #{abc}

@@ -1,6 +1,6 @@
 package com.jiazhong.huojian.mybatis.m1.mapper;
 
-import com.jiazhong.huojian.mybatis.m1.been.Custom;
+import com.jiazhong.huojian.mybatis.m1.bean.Custom;
 
 import java.util.List;
 

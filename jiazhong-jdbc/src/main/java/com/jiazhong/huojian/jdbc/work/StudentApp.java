@@ -1,6 +1,6 @@
 package com.jiazhong.huojian.jdbc.work;
 
-import com.jiazhong.huojian.jdbc.work.been.Student;
+import com.jiazhong.huojian.jdbc.work.bean.Student;
 import com.jiazhong.huojian.jdbc.work.dao.StudentDao;
 
 import java.util.List;

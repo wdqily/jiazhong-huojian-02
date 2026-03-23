@@ -1,7 +1,7 @@
 package com.jiazhong.huojian.mybatis.m4;
 
 import com.jiazhong.huojian.mybatis.m4.Mapper.EmpMapper;
-import com.jiazhong.huojian.mybatis.m4.been.Emp;
+import com.jiazhong.huojian.mybatis.m4.bean.Emp;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -95,6 +95,6 @@ public class App {
     }
 
     public static void main(String[] args) {
-        g();
+        c();
     }
 }

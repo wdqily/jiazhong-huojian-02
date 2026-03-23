@@ -1,4 +1,4 @@
-package com.jiazhong.huojian.jdbc.work.been;
+package com.jiazhong.huojian.jdbc.work.bean;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

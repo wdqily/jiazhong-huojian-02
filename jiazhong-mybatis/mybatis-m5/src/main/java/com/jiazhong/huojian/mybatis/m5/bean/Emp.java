@@ -1,13 +1,11 @@
-package com.jiazhong.huojian.jdbc.oop.been;
+package com.jiazhong.huojian.mybatis.m5.bean;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Emp {
+public class Emp implements Serializable {
     private Integer empNo;
     private String ename;
     private String job;

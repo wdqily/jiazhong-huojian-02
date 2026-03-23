@@ -2,7 +2,7 @@ package com.jiazhong.huojian.mybatis.m5;
 
 
 import com.jiazhong.huojian.mybatis.m5.Mapper.EmpMapper;
-import com.jiazhong.huojian.mybatis.m5.been.Emp;
+import com.jiazhong.huojian.mybatis.m5.bean.Emp;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;

@@ -1,6 +1,6 @@
 package com.jiazhong.huojian.mybatis.m1;
 
-import com.jiazhong.huojian.mybatis.m1.been.Custom;
+import com.jiazhong.huojian.mybatis.m1.bean.Custom;
 import com.jiazhong.huojian.mybatis.m1.mapper.CustomMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
