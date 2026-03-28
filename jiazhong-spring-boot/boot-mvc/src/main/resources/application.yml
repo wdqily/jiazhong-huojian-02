@@ -1,0 +1,12 @@
+server:
+  # 端口号 默认8080
+  port: 8080
+  #项目url
+  servlet:
+    context-path: /mvc #默认/
+spring:
+  mvc:
+    view:
+      # 前缀+return+后缀 /index.html
+      suffix: .html # 后缀
+      prefix: / # 前缀
