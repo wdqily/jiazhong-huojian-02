@@ -28,5 +28,19 @@ public class EmpController {
     public PageInfo<Emp> findByPage(@RequestParam(name = "page", defaultValue = "1") int page) {
         return empService.findByPage(page);
     }
+
+    @ResponseBody
+    @RequestMapping("/search")
+    public PageInfo<Emp> searchByName(@RequestParam(name = "page", defaultValue = "1") int page,
+                                      @RequestParam("ename") String ename) {
+        return empService.searchByName(page, ename);
+    }
+
+    @ResponseBody
+    @RequestMapping("/delete")
+    public int delete(@RequestParam("id") int id) {
+        return empService.delete(id);
+
+    }
 }
 

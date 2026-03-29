@@ -11,4 +11,8 @@ public interface EmpService {
     List<Emp> findALL();
 
     PageInfo<Emp> findByPage(int page);
+
+    PageInfo<Emp> searchByName(int page, String ename);
+
+    int delete(int id);
 }

@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
-    <!-- 引入样式 -->
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 </head>
 <body>
@@ -11,47 +10,30 @@
     <el-table
             :data="emps"
             style="width: 100%">
-        <el-table-column
-                label="编号"
-                prop="empNo">
-        </el-table-column>
-        <el-table-column
-                label="姓名"
-                prop="ename">
-        </el-table-column>
-        <el-table-column
-                label="职位"
-                prop="job">
-        </el-table-column>
-        <el-table-column
-                label="上司ID"
-                prop="mgr">
-        </el-table-column>
-        <el-table-column
-                label="入职时间"
-                prop="hireDate">
-        </el-table-column>
-        <el-table-column
-                label="工资"
-                prop="sal">
-        </el-table-column>
-        <el-table-column
-                label="奖金"
-                prop="comm">
-        </el-table-column>
-        <el-table-column
-                label="部门ID"
-                prop="deptNo">
-        </el-table-column>
-        <el-table-column
-                align="right">
+        <el-table-column label="编号" prop="empNo"></el-table-column>
+        <el-table-column label="姓名" prop="ename"></el-table-column>
+        <el-table-column label="职位" prop="job"></el-table-column>
+        <el-table-column label="上司ID" prop="mgr"></el-table-column>
+        <el-table-column label="入职时间" prop="hireDate"></el-table-column>
+        <el-table-column label="工资" prop="sal"></el-table-column>
+        <el-table-column label="奖金" prop="comm"></el-table-column>
+        <el-table-column label="部门ID" prop="deptNo"></el-table-column>
+        <el-table-column align="right">
             <template slot="header" slot-scope="scope">
                 <el-input
-                        size="mini"
-                        placeholder="输入关键字搜索"/>
+                        v-model="searchKeyword"
+                        size="medium"
+                        placeholder="搜索员工姓名、职位..."
+                        prefix-icon="el-icon-search"
+                        class="search-input"
+                        @keyup.enter.native="handleSearch">
+                </el-input>
             </template>
             <template slot-scope="scope">
-                <el-button type="danger" icon="el-icon-delete-solid" circle></el-button>
+                <el-button type="danger" icon="el-icon-delete-solid" circle
+                           @click="handleDelete(scope.row)">
+
+                </el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -64,11 +46,8 @@
     </el-pagination>
 </div>
 
-</body>
-</html>
 <script src="js/vue.min.js"></script>
 <script src="js/axios.min.js"></script>
-<!-- 引入组件库 -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script>
     new Vue({
@@ -76,20 +55,45 @@
         data() {
             return {
                 emps: [],
-                all_count: 0
+                all_count: 0,
+                searchKeyword: ''
             }
         },
         methods: {
             loadEmpData(page) {
-                // 1. 调用controller,会返回一个数据
                 axios({
                     url: '/emp/page?page=' + page
                 }).then(resp => {
-                    //list是分页标签返回的数据
                     this.emps = resp.data.list
                     this.all_count = resp.data.total
                 })
-                // 2. 将这个集合遍历
+            },
+            handleSearch() {
+                axios({
+                    url: '/emp/search?page=1&ename=' + this.searchKeyword
+                }).then(resp => {
+                    this.emps = resp.data.list;
+                    this.all_count = resp.data.total
+                })
+            },
+            handleDelete(row) {
+                this.$confirm('确认删除该员工吗？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios({
+                        url: '/emp/delete?id=' + row.empNo
+                    }).then(resp => {
+                        //重新刷新页面
+                        this.loadEmpData(1)
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             }
         },
         created() {
@@ -97,3 +101,5 @@
         }
     })
 </script>
+</body>
+</html>

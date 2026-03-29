@@ -26,4 +26,16 @@ public class EmpServiceImpl implements EmpService {
         List<Emp> list = empMapper.findAll();
         return new PageInfo<>(list);
     }
+
+    @Override
+    public PageInfo<Emp> searchByName(int page, String ename) {
+        PageHelper.startPage(page, 10);
+        List<Emp> list = empMapper.searchByName("%" + ename + "%");
+        return new PageInfo<>(list);
+    }
+
+    @Override
+    public int delete(int id) {
+        return empMapper.delete(id);
+    }
 }
