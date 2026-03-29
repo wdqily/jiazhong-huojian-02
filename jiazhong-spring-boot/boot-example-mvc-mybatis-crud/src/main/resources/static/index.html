@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<div id="app">
+    <table border="1" width="80%" align="center">
+        <tr>
+            <th>编号</th>
+            <th>姓名</th>
+            <th>工作</th>
+            <th>上司id</th>
+            <th>奖金</th>
+            <th>工资</th>
+            <th>部门id</th>
+            <th>状态</th>
+            <th>入职时间</th>
+        </tr>
+        <tr v-for="e in emps">
+            <td>{{e.empNo}}</td>
+            <td>{{e.ename}}</td>
+            <td>{{e.job}}</td>
+            <td>{{e.mgr}}</td>
+            <td>{{e.comm}}</td>
+            <td>{{e.sal}}</td>
+            <td>{{e.deptNo}}</td>
+            <td>{{e.state}}</td>
+            <td>{{e.hireDate}}</td>
+        </tr>
+    </table>
+    <hr/>
+    <el-table
+            :data="emps"
+            style="width: 100%">
+        <el-table-column
+                prop="empNo"
+                label="编号"
+                width="180">
+        </el-table-column>
+        <el-table-column
+                prop="ename"
+                label="姓名"
+                width="180">
+        </el-table-column>
+        <el-table-column
+                prop="job"
+                label="工作">
+        </el-table-column>
+        <el-table-column
+                prop="mgr"
+                label="上司id">
+        </el-table-column>
+        <el-table-column
+                prop="hireDate"
+                label="入职时间"
+                width="180">
+        </el-table-column>
+        <el-table-column
+                prop="sal"
+                label="工资"
+                width="180">
+        </el-table-column>
+        <el-table-column
+                prop="comm"
+                label="奖金">
+        </el-table-column>
+        <el-table-column
+                prop="deptNo"
+                label="部门id">
+        </el-table-column>
+    </el-table>
+
+    <style>
+        .el-table .warning-row {
+            background: oldlace;
+        }
+
+        .el-table .success-row {
+            background: #41871a;
+        }
+    </style>
+</div>
+</body>
+</html>
+<script src="js/vue.min.js"></script>
+<script src="js/axios.min.js"></script>
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                emps: []
+            }
+        },
+        methods: {
+            loadEmpData() {
+                // 1. 调用controller,会返回一个数据
+                axios({
+                    url: '/emp/find'
+                }).then(resp => {
+                    this.emps = resp.data
+                })
+                // 2. 将这个集合便利
+            }
+        },
+        created() {
+            this.loadEmpData()
+        }
+    })
+</script>

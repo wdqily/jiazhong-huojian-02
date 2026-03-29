@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1 id="h1"></h1>
+<div id="app">
+    <H1>变量定义区域</H1>
+    a:{{a}}<br/>
+    b:{{b}}<br/>
+    c:{{c}}<br/>
+    <h2>{{c}}</h2>
+    <h2 v-html="c"></h2>
+    <hr/>
+    <h2>遍历数组</h2>
+    <p v-for="a in d">{{a}}</p>
+    <h2>获取对象</h2>
+    对象：{{e}}<br/>
+    某个值：{{e.id}},{{e.name}}<br/>
+    <h1>函数调用区域</h1>
+    <button @click="fun_a">fun_a函数</button>
+</div>
+</body>
+</html>
+<!--引入依赖-->
+<script src="js/vue.min.js"></script>
+<script src="js/axios.min.js"></script>
+
+<!--Vue-->
+<script>
+    new Vue({
+        //绑定标签
+        el: '#app',
+        data() {
+            return {
+                //变量定义区域
+                a: 1,
+                b: 2,
+                c: 'aaa',
+                d: ['555', '666', '777', '888'],
+                e: {
+                    id: 1,
+                    name: '李斯',
+                    age: 20,
+                    gender: '男'
+                }
+            }
+        },
+        //定义函数
+        methods: {
+            fun_a() {
+                this.a++
+            },
+            fun_b(m) {
+                this.b = m
+            }
+        },
+        //页面执行时加载
+        created() {
+            this.fun_b(9)
+        }
+    })
+</script>
