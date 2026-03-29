@@ -26,7 +26,7 @@
                         placeholder="搜索员工姓名、职位..."
                         prefix-icon="el-icon-search"
                         class="search-input"
-                        @keyup.enter.native="handleSearch">
+                        @keyup.enter.native="handleSearch(1)">
                 </el-input>
             </template>
             <template slot-scope="scope">
@@ -41,7 +41,8 @@
             background
             style="text-align: center"
             layout="prev, pager, next"
-            @current-change="loadEmpData"
+            :current-page.sync="page"
+            @current-change="handleSearch"
             :total="all_count">
     </el-pagination>
 </div>
@@ -56,7 +57,8 @@
             return {
                 emps: [],
                 all_count: 0,
-                searchKeyword: ''
+                searchKeyword: '',
+                page: 1,
             }
         },
         methods: {
@@ -68,9 +70,10 @@
                     this.all_count = resp.data.total
                 })
             },
-            handleSearch() {
+            handleSearch(page) {
+                this.page = page
                 axios({
-                    url: '/emp/search?page=1&ename=' + this.searchKeyword
+                    url: '/emp/search?page=' + page + '&ename=' + this.searchKeyword
                 }).then(resp => {
                     this.emps = resp.data.list;
                     this.all_count = resp.data.total
@@ -86,7 +89,8 @@
                         url: '/emp/delete?id=' + row.empNo
                     }).then(resp => {
                         //重新刷新页面
-                        this.loadEmpData(1)
+                        // this.loadEmpData(1)
+                        this.handleSearch(1)
                     });
                 }).catch(() => {
                     this.$message({
