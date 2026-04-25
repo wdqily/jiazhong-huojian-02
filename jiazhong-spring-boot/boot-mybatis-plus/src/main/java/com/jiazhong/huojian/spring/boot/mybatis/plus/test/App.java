@@ -159,6 +159,11 @@ public class App {
         service.list(wrapper).forEach(System.out::println);
     }
 
+    @Test
+    public void find9() {
+        service.findAllEmp();
+    }
+
 
 }
 

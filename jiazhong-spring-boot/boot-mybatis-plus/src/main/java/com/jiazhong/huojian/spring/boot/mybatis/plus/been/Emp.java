@@ -14,10 +14,11 @@ public class Emp implements Serializable {
     private String job;
     private Integer mgr;
     //自动填充:当添加或者修改时自动填充默认值
-    @TableField(fill = FieldFill.INSERT_UPDATE)
+    @TableField(fill = FieldFill.INSERT_UPDATE, value = "hiredate")
     private String hireDate;
     private Integer sal;
     private Integer comm;
+    @TableField(value = "deptno")
     private Integer deptNo;
     //局部逻辑删除写法
     @TableLogic(delval = "0", value = "1")

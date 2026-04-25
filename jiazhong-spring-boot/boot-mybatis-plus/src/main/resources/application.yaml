@@ -6,12 +6,14 @@ spring:
     password: 20050217
     type: com.alibaba.druid.pool.DruidDataSource
 mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-    map-underscore-to-camel-case: false
-  global-config:
+  #configuration:
+  # log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  # map-underscore-to-camel-case: false
+  # global-config:
     # 实现表的逻辑删除
-    db-config:
-      logic-delete-field: state
-      logic-delete-value: 0 #代表删除
-      logic-not-delete-value: 1 #代表存在
+  #db-config:
+  #logic-delete-field: state
+  #logic-delete-value: 0 #代表删除
+  #logic-not-delete-value: 1 #代表存在
+  config-location: classpath:/config.xml # config.xml ⽂件位置
+  mapper-locations: classpath:/mapper/**/*.xml
