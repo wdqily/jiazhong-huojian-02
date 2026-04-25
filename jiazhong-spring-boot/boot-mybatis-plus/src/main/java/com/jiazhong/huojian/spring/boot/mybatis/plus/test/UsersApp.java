@@ -21,4 +21,6 @@ public class UsersApp {
         users.setPassword(Md5UtilHandler.encryptMD5("20050217"));
         service.save(users);
     }
+
+
 }
