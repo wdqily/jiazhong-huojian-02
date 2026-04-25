@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/jiazhong_2026_1
+    username: root
+    password: 20050217
+    type: com.alibaba.druid.pool.DruidDataSource
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: false
+  global-config:
+    # 实现表的逻辑删除
+    db-config:
+      logic-delete-field: state
+      logic-delete-value: 0 #代表删除
+      logic-not-delete-value: 1 #代表存在
