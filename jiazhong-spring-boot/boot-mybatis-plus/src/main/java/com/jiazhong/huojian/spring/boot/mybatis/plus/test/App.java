@@ -1,5 +1,6 @@
 package com.jiazhong.huojian.spring.boot.mybatis.plus.test;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jiazhong.huojian.spring.boot.mybatis.plus.been.Emp;
 import com.jiazhong.huojian.spring.boot.mybatis.plus.service.EmpService;
 import jakarta.annotation.Resource;
@@ -56,6 +57,15 @@ public class App {
     public void findByID() {
         Emp emp = service.getById(8117);
         log.info("emp:{}", emp);
+    }
+
+    //分页操作
+    @Test
+    public void page() {
+        Page<Emp> page = Page.of(1, 10);
+        service.list(page).forEach(System.out::println);
+        page.setRecords(service.list(page));
+        log.info("当前页数据：{}", page);
     }
 }
 
