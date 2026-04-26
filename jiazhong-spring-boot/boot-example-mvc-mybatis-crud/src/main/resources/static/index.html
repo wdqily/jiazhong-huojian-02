@@ -1,42 +1,237 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Document</title>
+    <title>员工管理系统</title>
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        #app {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #11998e;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .el-table {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .el-table th {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%) !important;
+            color: white !important;
+            font-weight: 600;
+            padding: 15px 10px;
+        }
+
+        .el-table td {
+            padding: 12px 10px;
+        }
+
+        .el-table--enable-row-hover .el-table__body tr:hover > td {
+            background-color: #e8f5e9 !important;
+        }
+
+        .el-button.el-button--danger {
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(245, 108, 108, 0.3);
+        }
+
+        .el-button.el-button--danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(245, 108, 108, 0.4);
+        }
+
+        .el-pagination {
+            margin-top: 30px;
+            padding: 20px;
+        }
+
+        .el-pagination.is-background .el-pager li:not(.disabled).active {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .el-pagination.is-background .el-pager li {
+            border-radius: 50%;
+            margin: 0 4px;
+            transition: all 0.3s ease;
+        }
+
+        .el-pagination.is-background .el-pager li:hover {
+            background-color: #11998e;
+            color: white;
+        }
+
+        .el-pagination button:hover {
+            color: #11998e;
+        }
+
+        .el-table__empty-text {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .search-container {
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #f8fffa 0%, #e8f5e9 100%);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(17, 153, 142, 0.1);
+        }
+
+        .search-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .search-label {
+            font-size: 16px;
+            color: #11998e;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .search-input-enhanced {
+            width: 280px;
+        }
+
+        .search-input-enhanced .el-input__inner {
+            border-radius: 25px;
+            border: 2px solid #c8e6c9;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .search-input-enhanced .el-input__inner:focus {
+            border-color: #11998e;
+            box-shadow: 0 0 0 3px rgba(17, 153, 142, 0.15);
+        }
+
+        .search-input-enhanced .el-input__inner::placeholder {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .search-button {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            border: none;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(17, 153, 142, 0.3);
+        }
+
+        .search-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(17, 153, 142, 0.4);
+        }
+
+        .search-button:active {
+            transform: translateY(0);
+        }
+
+        .table-wrapper {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
 <div id="app">
-    <el-table
-            :data="emps"
-            style="width: 100%">
-        <el-table-column label="编号" prop="empNo"></el-table-column>
-        <el-table-column label="姓名" prop="ename"></el-table-column>
-        <el-table-column label="职位" prop="job"></el-table-column>
-        <el-table-column label="上司ID" prop="mgr"></el-table-column>
-        <el-table-column label="入职时间" prop="hireDate"></el-table-column>
-        <el-table-column label="工资" prop="sal"></el-table-column>
-        <el-table-column label="奖金" prop="comm"></el-table-column>
-        <el-table-column label="部门ID" prop="deptNo"></el-table-column>
-        <el-table-column align="right">
-            <template slot="header" slot-scope="scope">
-                <el-input
-                        v-model="searchKeyword"
-                        size="medium"
-                        placeholder="搜索员工姓名、职位..."
-                        prefix-icon="el-icon-search"
-                        class="search-input"
-                        @keyup.enter.native="handleSearch(1)">
-                </el-input>
-            </template>
-            <template slot-scope="scope">
-                <el-button type="danger" icon="el-icon-delete-solid" circle
-                           @click="handleDelete(scope.row)">
+    <div class="page-title">员工管理系统</div>
+    <div class="search-container">
+        <div class="search-wrapper">
+            <span class="search-label">🔍 搜索员工</span>
+            <el-input
+                    v-model="searchKeyword"
+                    size="medium"
+                    placeholder="请输入员工姓名或职位..."
+                    prefix-icon="el-icon-search"
+                    class="search-input-enhanced"
+                    @keyup.enter.native="handleSearch(1)"
+                    clearable>
+            </el-input>
+            <el-button type="success" icon="el-icon-search" class="search-button" @click="handleSearch(1)">
+                搜索
+            </el-button>
+            <el-button type="primary" icon="el-icon-plus" class="search-button" @click="openAddDialog">添加员工
+            </el-button>
+        </div>
+    </div>
+    <div class="table-wrapper">
+        <el-table
+                :data="emps"
+                style="width: 100%">
+            <el-table-column label="编号" prop="empNo"></el-table-column>
+            <el-table-column label="姓名" prop="ename"></el-table-column>
+            <el-table-column label="职位" prop="job"></el-table-column>
+            <el-table-column label="上司ID" prop="mgr"></el-table-column>
+            <el-table-column label="入职时间" prop="hireDate"></el-table-column>
+            <el-table-column label="工资" prop="sal"></el-table-column>
+            <el-table-column label="奖金" prop="comm"></el-table-column>
+            <el-table-column label="部门ID" prop="deptNo"></el-table-column>
+            <el-table-column align="right">
+                <template slot-scope="scope">
+                    <el-button type="primary" icon="el-icon-edit" circle
+                               @click="handleUpdate(scope.row)">
 
-                </el-button>
-            </template>
-        </el-table-column>
-    </el-table>
+                    </el-button>
+                    <el-button type="danger" icon="el-icon-delete-solid" circle
+                               @click="handleDelete(scope.row)">
+
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
     <el-pagination
             background
             style="text-align: center"
@@ -45,6 +240,37 @@
             @current-change="handleSearch"
             :total="all_count">
     </el-pagination>
+
+    <el-dialog :title="isEdit ? '修改员工信息' : '添加新员工'" :visible.sync="addDialogVisible" width="50%">
+        <el-form :model="empForm" label-width="100px">
+            <el-form-item label="姓名">
+                <el-input v-model="empForm.ename" placeholder="请输入姓名"></el-input>
+            </el-form-item>
+            <el-form-item label="职位">
+                <el-input v-model="empForm.job" placeholder="请输入职位"></el-input>
+            </el-form-item>
+            <el-form-item label="上司ID">
+                <el-input v-model="empForm.mgr" placeholder="请输入上司编号"></el-input>
+            </el-form-item>
+            <el-form-item label="入职时间">
+                <el-date-picker v-model="empForm.hireDate" type="date" placeholder="选择日期" value-format="yyyy-MM-dd"
+                                style="width: 100%;"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="工资">
+                <el-input v-model="empForm.sal" placeholder="请输入基本工资"></el-input>
+            </el-form-item>
+            <el-form-item label="奖金">
+                <el-input v-model="empForm.comm" placeholder="请输入奖金"></el-input>
+            </el-form-item>
+            <el-form-item label="部门ID">
+                <el-input v-model="empForm.deptNo" placeholder="请输入部门编号"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="addDialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="handleAdd">确 定</el-button>
+        </div>
+    </el-dialog>
 </div>
 
 <script src="js/vue.min.js"></script>
@@ -59,6 +285,9 @@
                 all_count: 0,
                 searchKeyword: '',
                 page: 1,
+                addDialogVisible: false,
+                empForm: {ename: '', job: '', mgr: '', hireDate: '', sal: '', comm: '', deptNo: '', state: 1},
+                isEdit: false,
             }
         },
         methods: {
@@ -98,7 +327,51 @@
                         message: '已取消删除'
                     });
                 });
-            }
+            },
+            //打开面板
+            openAddDialog() {
+                this.isEdit = false;
+                this.empForm = {
+                    empNo: '',
+                    ename: '',
+                    job: '',
+                    mgr: '',
+                    hireDate: '',
+                    sal: '',
+                    comm: '',
+                    deptNo: '',
+                    state: 1
+                };
+                this.addDialogVisible = true;
+            },
+            handleAdd() {
+                let url = this.isEdit ? '/emp/update' : '/emp/add'
+                let message = this.isEdit ? '更新成功' : '添加成功'
+                axios.post(url, this.empForm).then(resp => {
+                    this.$message({
+                        type: 'success',
+                        message: message
+                    });
+                    this.empForm = {
+                        empNo: '',
+                        ename: '',
+                        job: '',
+                        mgr: '',
+                        hireDate: '',
+                        sal: '',
+                        comm: '',
+                        deptNo: '',
+                        state: 1
+                    };
+                    this.addDialogVisible = false
+                    this.handleSearch(1)
+                })
+            },
+            handleUpdate(row) {
+                this.empForm = {...row};
+                this.addDialogVisible = true;
+                this.isEdit = true;
+            },
         },
         created() {
             this.loadEmpData(1)

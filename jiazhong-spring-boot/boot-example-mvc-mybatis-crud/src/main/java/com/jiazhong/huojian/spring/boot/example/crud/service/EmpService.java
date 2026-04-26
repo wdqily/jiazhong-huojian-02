@@ -15,4 +15,8 @@ public interface EmpService {
     PageInfo<Emp> searchByName(int page, String ename);
 
     int delete(int id);
+
+    int add(Emp emp);
+
+    int update(Emp emp);
 }
