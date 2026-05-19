@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>员工数据管理系统</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            background-color: #f5f7fa;
+            font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+        }
+
+        .app-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            margin-bottom: 20px;
+            font-size: 22px;
+            font-weight: 600;
+            color: #303133;
+            border-left: 4px solid #409EFF;
+            padding-left: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+<div id="app" class="app-container">
+    <div class="page-header">
+        <span>员工信息列表</span>
+        <!-- 【修改】新增：添加员工按钮 -->
+        <el-button type="primary" size="medium" @click="dialogVisible = true">新增员工</el-button>
+    </div>
+
+    <el-table :data="empList" v-loading="loading" stripe border style="width: 100%">
+        <el-table-column prop="empNo" label="员工编号" width="100" align="center"></el-table-column>
+        <el-table-column prop="ename" label="姓名" width="120" align="center"></el-table-column>
+        <el-table-column prop="job" label="职位" width="120" align="center"></el-table-column>
+        <el-table-column prop="mgr" label="上级编号" width="100" align="center"></el-table-column>
+        <el-table-column prop="hireDate" label="入职日期" width="150" align="center"></el-table-column>
+
+        <el-table-column prop="sal" label="薪资" width="120" align="center">
+            <template slot-scope="scope">
+                <span style="color: #67C23A;">￥{{ scope.row.sal }}</span>
+            </template>
+        </el-table-column>
+
+        <el-table-column prop="comm" label="奖金" width="120" align="center">
+            <template slot-scope="scope">
+                <span v-if="scope.row.comm" style="color: #E6A23C;">￥{{ scope.row.comm }}</span>
+                <span v-else style="color: #909399;">无</span>
+            </template>
+        </el-table-column>
+
+        <el-table-column prop="deptNo" label="部门编号" align="center"></el-table-column>
+
+        <el-table-column label="操作" width="120" align="center">
+            <template slot-scope="scope">
+                <el-button type="danger" size="mini" @click="handleDelete(scope.row.empNo)">删除</el-button>
+            </template>
+        </el-table-column>
+    </el-table>
+
+    <!-- 【修改】新增：添加员工的弹窗与表单 -->
+    <el-dialog title="新增员工" :visible.sync="dialogVisible" width="500px" @close="resetForm">
+        <el-form :model="empForm" label-width="100px">
+            <el-form-item label="姓名">
+                <el-input v-model="empForm.ename"></el-input>
+            </el-form-item>
+            <el-form-item label="职位">
+                <el-input v-model="empForm.job"></el-input>
+            </el-form-item>
+            <el-form-item label="上级编号">
+                <el-input v-model.number="empForm.mgr"></el-input>
+            </el-form-item>
+            <el-form-item label="入职日期">
+                <el-date-picker v-model="empForm.hireDate" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"
+                                style="width: 100%;"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="薪资">
+                <el-input v-model.number="empForm.sal"></el-input>
+            </el-form-item>
+            <el-form-item label="奖金">
+                <el-input v-model.number="empForm.comm"></el-input>
+            </el-form-item>
+            <el-form-item label="部门编号">
+                <el-input v-model.number="empForm.deptNo"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="submitAdd" :loading="submitLoading">确 定</el-button>
+        </div>
+    </el-dialog>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                empList: [],
+                loading: false,
+                // 【修改】新增控制弹窗显示隐藏的变量
+                dialogVisible: false,
+                submitLoading: false,
+                // 【修改】新增双向绑定的表单数据对象
+                empForm: {
+                    ename: '',
+                    job: '',
+                    mgr: null,
+                    hireDate: '',
+                    sal: null,
+                    comm: null,
+                    deptNo: null
+                }
+            }
+        },
+        mounted() {
+            this.fetchEmpData();
+        },
+        methods: {
+            fetchEmpData() {
+                this.loading = true;
+                axios.get('http://localhost:8001/Emp/find1')
+                    .then(response => {
+                        this.empList = response.data;
+                    })
+                    .catch(error => {
+                        console.error("请求报错:", error);
+                        this.$message.error('数据加载失败，请检查后端服务');
+                    })
+                    .finally(() => {
+                        this.loading = false;
+                    });
+            },
+
+            handleDelete(id) {
+                this.$confirm('此操作将永久删除该员工, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.get(`http://localhost:8001/Emp/delete1?id=${id}`)
+                        .then(response => {
+                            if (response.data === 'success') {
+                                this.$message.success('删除成功!');
+                                this.fetchEmpData();
+                            } else {
+                                this.$message.error('删除失败');
+                            }
+                        });
+                }).catch(() => {
+                    this.$message.info('已取消删除');
+                });
+            },
+
+            // 【修改】新增：提交添加员工请求逻辑
+            submitAdd() {
+                if (!this.empForm.ename) {
+                    this.$message.warning('请输入员工姓名');
+                    return;
+                }
+                this.submitLoading = true;
+                // 这里发送 POST 请求，自动携带 JSON 数据
+                axios.post('http://localhost:8001/Emp/save', this.empForm)
+                    .then(response => {
+                        if (response.data === 'success') {
+                            this.$message.success('添加成功，缓存已刷新!');
+                            this.dialogVisible = false; // 关闭弹窗
+                            this.fetchEmpData();        // 重新拉取列表
+                        } else {
+                            this.$message.error('添加失败，请查看后端报错');
+                        }
+                    })
+                    .catch(error => {
+                        console.error("添加报错:", error);
+                        this.$message.error('请求发生异常');
+                    })
+                    .finally(() => {
+                        this.submitLoading = false;
+                    });
+            },
+
+            // 【修改】新增：弹窗关闭时重置表单，避免下次打开还有旧数据
+            resetForm() {
+                this.empForm = {
+                    ename: '',
+                    job: '',
+                    mgr: null,
+                    hireDate: '',
+                    sal: null,
+                    comm: null,
+                    deptNo: null
+                };
+            }
+        }
+    })
+</script>
+</body>
+</html>
