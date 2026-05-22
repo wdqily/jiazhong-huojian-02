@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>系统登录</title>
+    <style>
+        /* 基础的居中和样式，不做过多花哨设计 */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f5f7;
+            margin: 0;
+        }
+
+        .login-container {
+            background: #ffffff;
+            padding: 30px 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        .login-container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #007bff;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>用户登录</h2>
+    <form id="loginForm">
+        <div class="form-group">
+            <label for="username">账号</label>
+            <input type="text" id="username" name="username" required placeholder="请输入用户名">
+        </div>
+        <div class="form-group">
+            <label for="password">密码</label>
+            <input type="password" id="password" name="password" required placeholder="请输入密码">
+        </div>
+        <button type="submit">登录</button>
+    </form>
+</div>
+
+<script>
+    // 监听表单的提交事件
+    document.getElementById('loginForm').addEventListener('submit', function (event) {
+        // 阻止表单的默认跳转刷新行为
+        event.preventDefault();
+
+        // 获取用户输入的值
+        const usernameInput = document.getElementById('username').value;
+        const passwordInput = document.getElementById('password').value;
+
+        // 适配你的后端：因为后端没有用 @RequestBody，必须以 x-www-form-urlencoded 格式发送
+        const formData = new URLSearchParams();
+        formData.append('username', usernameInput);
+        formData.append('password', passwordInput);
+
+        // 发起 Fetch 请求调用后端接口 (确保你的 SpringBoot 启动在默认的 8080 端口)
+        fetch('http://localhost:8080/users/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('网络请求异常，状态码: ' + response.status);
+                }
+                // 你的后端如果查不到数据（账号密码错误），MyBatisPlus getOne 会返回 null，响应体为空
+                return response.text();
+            })
+            .then(text => {
+                if (text) {
+                    // 如果后端返回了数据，解析为 JSON 对象
+                    const user = JSON.parse(text);
+                    // 这里你的数据库 users 表必须要有 nickname 字段，否则会报错（参考你之前的日志）
+                    alert('登录成功！欢迎回来：' + user.nickname);
+                    localStorage.setItem("user", JSON.stringify(user));
+                    location.href = 'index.html'
+                } else {
+                    // 后端返回空数据，说明查无此人或密码错误
+                    alert('登录失败：用户名或密码错误，请检查。');
+                }
+            })
+            .catch(error => {
+                console.error('请求出错:', error);
+                alert('请求后端接口失败！请检查：\n1. SpringBoot 后端是否已运行\n2. UsersController 是否已添加 @CrossOrigin 注解\n3. 数据库结构是否与实体类一致');
+            });
+    });
+</script>
+</body>
+</html>
