@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>极客商城 - 购物车</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f5f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background: #fff;
+            padding: 15px 40px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h2 {
+            margin: 0;
+            color: #333;
+        }
+
+        .nav-links a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 16px;
+            margin-left: 15px;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            padding: 30px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .cart-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        th, td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            color: #333;
+            font-weight: normal;
+        }
+
+        .goods-info {
+            display: flex;
+            align-items: center;
+            text-align: left;
+        }
+
+        .goods-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 15px;
+            background: #eee;
+        }
+
+        .price, .subtotal {
+            color: #e1251b;
+            font-weight: bold;
+        }
+
+        .num-ctrl {
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .num-ctrl button {
+            background: #f4f4f4;
+            border: none;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .num-ctrl button:hover {
+            background: #e0e0e0;
+        }
+
+        .num-ctrl input {
+            width: 40px;
+            height: 30px;
+            border: none;
+            border-left: 1px solid #ccc;
+            border-right: 1px solid #ccc;
+            text-align: center;
+            outline: none;
+        }
+
+        .btn-delete {
+            color: #fff;
+            background-color: #dc3545;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+
+        .cart-footer {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .btn-clear {
+            color: #666;
+            background: #eee;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-clear:hover {
+            background: #ddd;
+        }
+
+        .checkout-box {
+            font-size: 18px;
+        }
+
+        .total-price {
+            color: #e1251b;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 15px;
+        }
+
+        .btn-checkout {
+            background: #e1251b;
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 4px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .btn-checkout:hover {
+            background: #c81623;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 50px 0;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div class="header">
+        <h2>购物车</h2>
+        <div class="nav-links">
+            <a href="index.html">返回首页</a>
+            <span v-if="isLogin" style="color: #666; font-size: 14px; margin-left: 15px;">欢迎，{{ user.nickname
+                }}</span>
+            <a href="#" v-if="isLogin" @click.prevent="logout" style="color: #999; font-size: 14px;">退出</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="cart-card">
+            <div v-if="cartList.length === 0" class="empty-cart">
+                <h3>购物车空空如也，快去挑点宝贝吧！</h3>
+                <a href="index.html" style="color: #007bff; text-decoration: none;">去逛逛</a>
+            </div>
+
+            <div v-else>
+                <table>
+                    <thead>
+                    <tr>
+                        <th width="40%">商品信息</th>
+                        <th width="15%">单价</th>
+                        <th width="20%">数量</th>
+                        <th width="15%">小计</th>
+                        <th width="10%">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="(item, index) in cartList" :key="item.goodsId">
+                        <td>
+                            <div class="goods-info">
+                                <img :src="item.picture || 'https://via.placeholder.com/80?text=No+Img'"
+                                     class="goods-img" alt="商品">
+                                <span>{{ item.goodsName }}</span>
+                            </div>
+                        </td>
+                        <td class="price">¥ {{ Number(item.price).toFixed(2) }}</td>
+                        <td>
+                            <div class="num-ctrl">
+                                <button @click="updateNum(item, -1)" :disabled="item.number <= 0">-</button>
+                                <input type="text" readonly :value="item.number">
+                                <button @click="updateNum(item, 1)">+</button>
+                            </div>
+                        </td>
+                        <td class="subtotal">¥ {{ (item.price * item.number).toFixed(2) }}</td>
+                        <td>
+                            <button class="btn-delete" @click="deleteItem(item.goodsId, index)">删除</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div class="cart-footer">
+                    <button class="btn-clear" @click="clearCart">清空购物车</button>
+                    <div class="checkout-box">
+                        <span>已选 {{ totalCount }} 件商品</span>
+                        <span>总计: </span>
+                        <span class="total-price">¥ {{ totalPrice }}</span>
+                        <button class="btn-checkout" @click="checkout">去结算</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/vue.min.js"></script>
+<script src="js/axios.min.js"></script>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            isLogin: false,
+            user: {},
+            cartList: []
+        },
+        computed: {
+            totalPrice() {
+                let total = 0;
+                this.cartList.forEach(item => {
+                    total += item.price * item.number;
+                });
+                return total.toFixed(2);
+            },
+            totalCount() {
+                let count = 0;
+                this.cartList.forEach(item => {
+                    count += item.number;
+                });
+                return count;
+            }
+        },
+        created() {
+            this.checkLogin();
+        },
+        methods: {
+            checkLogin() {
+                let userStr = localStorage.getItem('user');
+                if (!userStr) {
+                    alert('请先登录查看购物车！');
+                    location.href = 'login.html';
+                    return;
+                }
+                this.user = JSON.parse(userStr);
+                this.isLogin = true;
+                this.loadCart();
+            },
+            loadCart() {
+                axios.get('http://localhost:8080/carts/find', {
+                    params: {userId: this.user.id}
+                }).then(resp => {
+                    this.cartList = resp.data;
+                }).catch(err => {
+                    console.error('获取购物车失败:', err);
+                });
+            },
+            updateNum(item, change) {
+                let newNum = item.number + change;
+                if (newNum < 1) return;
+
+                let data = new URLSearchParams();
+                // 修改：修正了大小写错误，将 this.user.Id 改为 this.user.id
+                data.append('userId', this.user.id);
+                data.append('goodsId', item.goodsId);
+                data.append('number', newNum);
+
+                axios.post('http://localhost:8080/carts/updateNum', data)
+                    .then(resp => {
+                        if (resp.data === 'success') {
+                            item.number = newNum;
+                        } else {
+                            alert("更新数量失败");
+                        }
+                    });
+            },
+            deleteItem(goodsId, index) {
+                if (!confirm('确定要移出购物车吗？')) return;
+                let data = new URLSearchParams();
+                data.append('userId', this.user.id);
+                data.append('goodsId', goodsId);
+
+                axios.post('http://localhost:8080/carts/delete', data)
+                    .then(resp => {
+                        if (resp.data === 'success') {
+                            this.cartList.splice(index, 1);
+                        } else {
+                            alert('删除失败');
+                        }
+                    });
+            },
+            clearCart() {
+                if (!confirm('确定要清空购物车吗？操作不可恢复！')) return;
+
+                let data = new URLSearchParams();
+                // 修改：修正了大小写错误，将 this.user.Id 改为 this.user.id
+                data.append('userId', this.user.id);
+
+                axios.post('http://localhost:8080/carts/clear', data)
+                    .then(resp => {
+                        if (resp.data === 'success') {
+                            this.cartList = [];
+                        } else {
+                            alert('清空失败');
+                        }
+                    });
+            },
+            checkout() {
+                //alert('结算功能待开发！总计支付：¥' + this.totalPrice);
+                //假设自己生成一个随机订单号模拟
+                let traceNo = "ORDER_" + new Date().getTime();
+                let subject = "极客商城订单结算";
+                // 直接让浏览器跳过去，后端会返回支付宝的页面
+                window.location.href = `http://localhost:8080/pay/ali?traceNo=${traceNo}&totalAmount=${this.totalPrice}&subject=${subject}`;
+            },
+            logout() {
+                localStorage.removeItem('user');
+                location.href = 'index.html';
+            }
+        }
+    });
+</script>
+</body>
+</html>

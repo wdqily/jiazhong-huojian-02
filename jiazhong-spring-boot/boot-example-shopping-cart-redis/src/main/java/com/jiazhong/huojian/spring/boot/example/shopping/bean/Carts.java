@@ -1,0 +1,24 @@
+package com.jiazhong.huojian.spring.boot.example.shopping.bean;
+
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.Data;
+
+import java.io.Serializable;
+
+@Data
+public class Carts implements Serializable {
+    @TableId
+    private String id;
+    private String userId;
+    private String goodsId;
+    private Integer number;
+    private Integer state;
+    @TableField(fill = FieldFill.INSERT)
+    private String createTime;
+    @TableField(exist = false)
+    private String goodsName;
+    @TableField(exist = false)
+    private Double price;
+}
