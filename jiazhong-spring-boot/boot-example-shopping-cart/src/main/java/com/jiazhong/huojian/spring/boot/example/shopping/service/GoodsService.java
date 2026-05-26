@@ -6,4 +6,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface GoodsService extends IService<Goods> {
+    Goods findGoodsByGoodsId(String goodsId);
 }

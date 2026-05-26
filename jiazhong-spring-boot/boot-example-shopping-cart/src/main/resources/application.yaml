@@ -13,6 +13,6 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
-      ogic-not-delete-value: 1
+      logic-not-delete-value: 1
       logic-delete-value: 0
-      ogic-delete-field: state
+      logic-delete-field: state

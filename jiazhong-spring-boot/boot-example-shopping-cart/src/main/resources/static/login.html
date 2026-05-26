@@ -115,20 +115,23 @@
                     throw new Error('网络请求异常，状态码: ' + response.status);
                 }
                 // 你的后端如果查不到数据（账号密码错误），MyBatisPlus getOne 会返回 null，响应体为空
-                return response.text();
+                return response.json();
             })
-            .then(text => {
-                if (text) {
+            .then(result => {
+                // ===== 修改开始：适配 JWT + JsonResult =====
+                if (result && result.success) {
                     // 如果后端返回了数据，解析为 JSON 对象
-                    const user = JSON.parse(text);
+                    const token = result.data;
+                    const user = result.error;
                     // 这里你的数据库 users 表必须要有 nickname 字段，否则会报错（参考你之前的日志）
                     alert('登录成功！欢迎回来：' + user.nickname);
+                    localStorage.setItem("token", token);
                     localStorage.setItem("user", JSON.stringify(user));
                     location.href = 'index.html'
                 } else {
-                    // 后端返回空数据，说明查无此人或密码错误
-                    alert('登录失败：用户名或密码错误，请检查。');
+                    alert('登录失败：' + (result && result.error ? result.error : '用户名或密码错误，请检查。'));
                 }
+                // ===== 修改结束：适配 JWT + JsonResult =====
             })
             .catch(error => {
                 console.error('请求出错:', error);

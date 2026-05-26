@@ -217,7 +217,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(item, index) in cartList" :key="item.id">
+                    <tr v-for="(item, index) in cartList" :key="item.goodsId">
                         <td>
                             <div class="goods-info">
                                 <img :src="item.picture || 'https://via.placeholder.com/80?text=No+Img'"
@@ -235,7 +235,7 @@
                         </td>
                         <td class="subtotal">¥ {{ (item.price * item.number).toFixed(2) }}</td>
                         <td>
-                            <button class="btn-delete" @click="deleteItem(item.id, index)">删除</button>
+                            <button class="btn-delete" @click="deleteItem(item.goodsId, index)">删除</button>
                         </td>
                     </tr>
                     </tbody>
@@ -264,6 +264,7 @@
         data: {
             isLogin: false,
             user: {},
+            token: '',
             cartList: [] // 购物车数据列表
         },
         computed: {
@@ -290,23 +291,38 @@
         methods: {
             // 校验登录
             checkLogin() {
+                // ===== 修改开始：适配 JWT + JsonResult 登录信息 =====
+                let token = localStorage.getItem('token');
                 let userStr = localStorage.getItem('user');
-                if (!userStr) {
+                if (!token || !userStr) {
                     alert('请先登录查看购物车！');
                     location.href = 'login.html';
                     return;
                 }
+                this.token = token;
                 this.user = JSON.parse(userStr);
                 this.isLogin = true;
                 this.loadCart(); // 登录校验通过后，加载购物车数据
+                // ===== 修改结束：适配 JWT + JsonResult 登录信息 =====
             },
             // 加载购物车列表
             loadCart() {
                 // 要求后端提供 /carts/list 接口，根据 userID 查询购物车详情列表
                 axios.get('http://localhost:8080/carts/find', {
-                    params: {userId: this.user.id}
+                    params: {userId: this.user.id},
+                    headers: {
+                        'Authorization': 'Bearer ' + this.token,
+                        'token': this.token
+                    }
                 }).then(resp => {
-                    this.cartList = resp.data;
+                    // ===== 修改开始：适配购物车列表 JsonResult 返回 =====
+                    if (resp.data && resp.data.success) {
+                        this.cartList = resp.data.data || [];
+                    } else {
+                        this.cartList = [];
+                        alert(resp.data && resp.data.error ? resp.data.error : '获取购物车失败');
+                    }
+                    // ===== 修改结束：适配购物车列表 JsonResult 返回 =====
                 }).catch(err => {
                     console.error('获取购物车失败:', err);
                 });
@@ -317,32 +333,48 @@
                 if (newNum < 0) return;
 
                 let data = new URLSearchParams();
-                data.append('id', item.id); // 购物车的ID
+                data.append('userId', this.user.id);
+                data.append('goodsId', item.goodsId);
                 data.append('number', newNum);
 
                 // 要求后端提供 /carts/updateNum 接口，接收 cartId 和 number
-                axios.post('http://localhost:8080/carts/updateNum', data)
+                axios.post('http://localhost:8080/carts/updateNum', data, {
+                    headers: {
+                        'Authorization': 'Bearer ' + this.token,
+                        'token': this.token
+                    }
+                })
                     .then(resp => {
-                        if (resp.data === 'success') {
+                        // ===== 修改开始：适配更新数量 JsonResult 返回 =====
+                        if (resp.data && resp.data.success) {
                             item.number = newNum; // 成功后更新前端渲染
                         } else {
-                            alert("更新数量失败");
+                            alert(resp.data && resp.data.error ? resp.data.error : "更新数量失败");
                         }
+                        // ===== 修改结束：适配更新数量 JsonResult 返回 =====
                     });
             },
             // 删除单个商品
-            deleteItem(id, index) {
+            deleteItem(goodsId, index) {
                 if (!confirm('确定要移出购物车吗？')) return;
                 let data = new URLSearchParams();
-                data.append('id', id);
+                data.append('userId', this.user.id);
+                data.append('goodsId', goodsId);
 
-                axios.post('http://localhost:8080/carts/delete', data)
+                axios.post('http://localhost:8080/carts/delete', data, {
+                    headers: {
+                        'Authorization': 'Bearer ' + this.token,
+                        'token': this.token
+                    }
+                })
                     .then(resp => {
-                        if (resp.data === 'success') {
+                        // ===== 修改开始：适配删除购物车 JsonResult 返回 =====
+                        if (resp.data && resp.data.success) {
                             this.cartList.splice(index, 1); // 成功后从数组中移除
                         } else {
-                            alert('删除失败');
+                            alert(resp.data && resp.data.error ? resp.data.error : '删除失败');
                         }
+                        // ===== 修改结束：适配删除购物车 JsonResult 返回 =====
                     });
             },
             // 清空购物车
@@ -353,12 +385,17 @@
                 data.append('userId', this.user.id);
 
                 // 要求后端提供 /carts/clear 接口，根据 userID 删除对应所有数据
-                axios.post('http://localhost:8080/carts/clear', data)
+                axios.post('http://localhost:8080/carts/clear', data, {
+                    headers: {
+                        'Authorization': 'Bearer ' + this.token,
+                        'token': this.token
+                    }
+                })
                     .then(resp => {
-                        if (resp.data === 'success') {
+                        if (resp.data && resp.data.success) {
                             this.cartList = []; // 成功后清空数组
                         } else {
-                            alert('清空失败');
+                            alert(resp.data && resp.data.error ? resp.data.error : '清空失败');
                         }
                     });
             },
@@ -368,7 +405,11 @@
             },
             // 退出
             logout() {
+                localStorage.removeItem('token');
                 localStorage.removeItem('user');
+                this.token = '';
+                this.user = {};
+                this.isLogin = false;
                 location.href = 'index.html';
             }
         }

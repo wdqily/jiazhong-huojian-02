@@ -106,6 +106,7 @@
             </template>
             <template v-else>
                 <span style="color: #666; font-size: 14px;">欢迎，{{ username }}</span>
+                <a href="cart.html" style="color: #e1251b; font-size: 14px; font-weight: bold;">我的购物车</a>
                 <a href="#" @click.prevent="logout" style="color: #999; font-size: 14px;">退出登录</a>
             </template>
         </div>
@@ -131,6 +132,7 @@
         data: {
             isLogin: false,
             username: '',
+            token: '',
             goodsList: []
         },
         created() {
@@ -138,36 +140,57 @@
             this.loadGoods();
         },
         methods: {
-            // 检查 localStorage 中是否有登录记录 (适配你的 login.html 逻辑)
+            // 检查 localStorage 中是否有登录记录
             checkLogin() {
-                // 直接通过固定的 key 获取用户名
+                // ===== 修改开始：适配 JWT + JsonResult 登录信息 =====
+                let token = localStorage.getItem('token');
                 let storedUser = localStorage.getItem('user');
-                let userObj = JSON.parse(storedUser);
-                if (userObj) {
+                let userObj = storedUser ? JSON.parse(storedUser) : null;
+                if (token && userObj) {
                     this.isLogin = true;
-                    this.username = userObj.nickname;
+                    this.token = token;
+                    this.username = userObj.nickname || userObj.username;
                 }
+                // ===== 修改结束：适配 JWT + JsonResult 登录信息 =====
             },
             // 获取商品列表
             loadGoods() {
                 axios.get('goods/find')
                     .then(response => {
-                        // 过滤掉已删除的商品 (state == 1 代表正常)
-                        this.goodsList = response.data.filter(item => item.state === 1);
+                        if (response.data && response.data.success) {
+                            // 注意：商品数组现在被包裹在 response.data.data 里面
+                            let goodsArray = response.data.data || [];
+                            // 过滤掉已删除的商品 (state == 1 代表正常)
+                            this.goodsList = goodsArray.filter(item => item.state === 1);
+                        } else {
+                            alert(response.data && response.data.error ? response.data.error : '获取商品数据失败');
+                        }
                     })
                     .catch(error => {
                         console.error('获取商品失败:', error);
-                        alert('获取商品列表失败，请确认后端服务已启动。');
+                        alert('获取商品列表失败，请确认后端服务已启动');
                     });
             },
             // 加入购物车
             addToCart(item) {
                 if (!this.isLogin) {
-                    alert('请先登录后再将商品加入购物车！');
+                    alert('请先登录后再将商品加入购物车');
                     location.href = 'login.html';
                     return;
                 }
+                // ===== 修改开始：购物车请求携带 JWT =====
+                let token = localStorage.getItem('token')
                 let users = JSON.parse(localStorage.getItem('user'))
+                if (!token || !users) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    this.isLogin = false;
+                    this.token = '';
+                    this.username = '';
+                    alert('请先登录后再将商品加入购物车');
+                    location.href = 'login.html';
+                    return;
+                }
                 console.log(users)
                 let data = new URLSearchParams()
                 data.append('userId', users.id)
@@ -176,22 +199,33 @@
                 axios({
                     url: 'carts/save',
                     method: 'post',
-                    data: data
-                }).then(resp => {
-                    if (resp.data === 'success') {
-                        alert('已成功将【' + item.goodsName + '】加入购物车！)');
-                    } else {
-                        alert("加入购物车失败")
+                    data: data,
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'token': token
                     }
+                }).then(resp => {
+                    // ===== 修改结束：购物车请求携带 JWT =====
+                    // ===== 修改开始：适配购物车 JsonResult 返回 =====
+                    if (resp.data && resp.data.success) {
+                        alert('已成功将【' + item.goodsName + '】加入购物车');
+                    } else {
+                        alert(resp.data && resp.data.error ? resp.data.error : "加入购物车失败")
+                    }
+                    // ===== 修改结束：适配购物车 JsonResult 返回 =====
                 })
 
 
             },
             // 退出登录
             logout() {
-                localStorage.clear();
+                // ===== 修改开始：退出时清理 JWT 登录信息 =====
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
                 this.isLogin = false;
                 this.username = '';
+                this.token = '';
+                // ===== 修改结束：退出时清理 JWT 登录信息 =====
                 alert('已退出登录');
             }
         }
