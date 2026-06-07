@@ -23,6 +23,7 @@ public class RocketMQProducerController {
     @Resource
     private RocketMQTemplate transactionRocketMQTemplate;
 
+    //同步
     @GetMapping("/sync/{content}")
     public JsonResult sync(@PathVariable String content) {
         SendResult sendResult = rocketMQTemplate.syncSend("BootA:sync", content);
@@ -30,6 +31,7 @@ public class RocketMQProducerController {
     }
 
     @SneakyThrows
+    //异步
     @GetMapping("/async/{content}")
     public JsonResult async(@PathVariable String content) {
         final JsonResult[] result = {null};
