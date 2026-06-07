@@ -14,7 +14,7 @@ public class 事务生产 {
     @SneakyThrows
     public static void main(String[] args) {
         TransactionMQProducer producer = new TransactionMQProducer("transaction_producer_a");
-        producer.setNamesrvAddr("192.168.100.137:9876");
+        producer.setNamesrvAddr("192.168.100.4:9876");
         //设置监听器
         producer.setTransactionListener(new 事务监听());
         producer.start();

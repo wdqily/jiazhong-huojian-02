@@ -16,7 +16,7 @@ public class 集群消费2 {
         // 1. 创建消费者 Consumer，指定消费者组名
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("consumer_a");
         // 2. 指定 Namesrv 地址
-        consumer.setNamesrvAddr("192.168.100.137:9876");
+        consumer.setNamesrvAddr("192.168.100.4:9876");
         // 3. 设置广播还是集群消费
         consumer.setMessageModel(MessageModel.CLUSTERING);
         // 4. 订阅主题 Topic 和 Tag

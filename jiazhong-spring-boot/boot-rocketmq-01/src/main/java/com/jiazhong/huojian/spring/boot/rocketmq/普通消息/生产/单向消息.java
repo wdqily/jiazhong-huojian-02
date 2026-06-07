@@ -13,7 +13,7 @@ public class 单向消息 {
     public static void main(String[] args) {
         DefaultMQProducer producer = new DefaultMQProducer("producer_a");
         // 2. 指定 Namesrv 地址
-        producer.setNamesrvAddr("192.168.100.137:9876");
+        producer.setNamesrvAddr("192.168.100.4:9876");
         // 3. 启动 producer
         producer.start();
         for (int i = 0; i < 21; i++) {

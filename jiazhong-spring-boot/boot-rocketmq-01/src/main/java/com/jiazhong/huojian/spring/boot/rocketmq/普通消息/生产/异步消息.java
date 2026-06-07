@@ -16,7 +16,7 @@ public class 异步消息 {
         //1. 创建消息生产者 producer，并指定生产者组名
         DefaultMQProducer producer = new DefaultMQProducer("producer_a");
         // 2. 指定 Namesrv 地址
-        producer.setNamesrvAddr("192.168.100.137:9876");
+        producer.setNamesrvAddr("192.168.100.4:9876");
         // 3. 启动 producer
         producer.start();
         for (int i = 0; i < 21; i++) {

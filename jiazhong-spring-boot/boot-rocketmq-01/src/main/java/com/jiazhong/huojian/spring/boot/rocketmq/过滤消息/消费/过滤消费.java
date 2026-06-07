@@ -14,7 +14,7 @@ public class 过滤消费 {
     @SneakyThrows
     public static void main(String[] args) {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("consumer_e");
-        consumer.setNamesrvAddr("110.42.213.132:9876");
+        consumer.setNamesrvAddr("192.168.100.4:9876");
         consumer.subscribe("TopicE", MessageSelector.bySql("age>40 and gender='女'"));
         consumer.registerMessageListener((MessageListenerConcurrently) (list, consumeConcurrentlyContext) -> {
             list.forEach(e -> log.info("tags:{},body:{}", e.getTags(), new String(e.getBody(), StandardCharsets.UTF_8)));

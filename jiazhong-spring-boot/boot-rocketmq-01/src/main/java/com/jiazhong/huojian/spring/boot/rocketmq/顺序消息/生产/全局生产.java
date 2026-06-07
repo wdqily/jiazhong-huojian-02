@@ -13,7 +13,7 @@ public class 全局生产 {
     @SneakyThrows
     public static void main(String[] args) {
         DefaultMQProducer producer = new DefaultMQProducer("producer_a");
-        producer.setNamesrvAddr("192.168.100.137:9876");
+        producer.setNamesrvAddr("192.168.100.4:9876");
         producer.start();
         for (int i = 0; i < 21; i++) {
             String body = "我是全局消息，编号为：" + i;

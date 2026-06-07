@@ -14,7 +14,7 @@ public class 部分消费 {
     @SneakyThrows
     public static void main(String[] args) {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("consumer_b");
-        consumer.setNamesrvAddr("192.168.100.137:9876");
+        consumer.setNamesrvAddr("192.168.100.4:9876");
         consumer.setMessageModel(MessageModel.BROADCASTING);
         consumer.subscribe("TopicB", "part");
         consumer.registerMessageListener((MessageListenerOrderly) (list, consumeConcurrentlyContext) -> {

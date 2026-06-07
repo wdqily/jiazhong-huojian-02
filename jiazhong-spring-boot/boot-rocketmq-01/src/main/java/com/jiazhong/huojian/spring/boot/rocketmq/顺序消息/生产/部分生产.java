@@ -14,7 +14,7 @@ public class 部分生产 {
     @SneakyThrows
     public static void main(String[] args) {
         DefaultMQProducer producer = new DefaultMQProducer("producer_a");
-        producer.setNamesrvAddr("192.168.100.137:9876");
+        producer.setNamesrvAddr("192.168.100.4:9876");
         producer.start();
         for (int i = 0; i < 21; i++) {
             Order order = new Order(i, (int) (Math.random() * 4), "订单" + i);

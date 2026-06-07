@@ -14,7 +14,7 @@ public class 过滤生产 {
     @SneakyThrows
     public static void main(String[] args) {
         DefaultMQProducer producer = new DefaultMQProducer("producer_e");
-        producer.setNamesrvAddr("192.168.100.137:9876");
+        producer.setNamesrvAddr("192.168.100.4:9876");
         producer.start();
         for (int i = 0; i < 21; i++) {
             int age = (int) (Math.random() * 50 + 10);

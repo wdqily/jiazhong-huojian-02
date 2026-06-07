@@ -15,7 +15,7 @@ public class 批量生产 {
     @SneakyThrows
     public static void main(String[] args) {
         DefaultMQProducer producer = new DefaultMQProducer("producer_d");
-        producer.setNamesrvAddr("192.168.100.137:9876");
+        producer.setNamesrvAddr("192.168.100.4:9876");
         producer.start();
         List<Message> list = new ArrayList<>();
         for (int i = 0; i < 21; i++) {

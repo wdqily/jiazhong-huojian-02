@@ -14,7 +14,7 @@ public class 批量消费 {
     @SneakyThrows
     public static void main(String[] args) {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("consumer_d");
-        consumer.setNamesrvAddr("192.168.100.137:9876");
+        consumer.setNamesrvAddr("192.168.100.4:9876");
         consumer.setMessageModel(MessageModel.BROADCASTING);
         consumer.subscribe("TopicD", "some");
         consumer.registerMessageListener((MessageListenerConcurrently) (list, consumeConcurrentlyContext) -> {
