@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>极客商城 - 订单详情</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f5f7;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .header {
+            background: #fff;
+            padding: 15px 40px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h2 {
+            margin: 0;
+            color: #333;
+        }
+
+        .nav-links a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 16px;
+            margin-left: 15px;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            padding: 30px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .order-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 360px;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .order-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            margin: 0 0 18px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px 20px;
+        }
+
+        .form-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-item.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-item label {
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .required {
+            color: #e1251b;
+            margin-right: 4px;
+        }
+
+        .form-item input,
+        .form-item textarea {
+            box-sizing: border-box;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px 12px;
+            font-size: 15px;
+            outline: none;
+            background: #fff;
+        }
+
+        .form-item input:focus,
+        .form-item textarea:focus {
+            border-color: #007bff;
+        }
+
+        .form-item textarea {
+            min-height: 84px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        .order-meta {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 18px;
+            padding: 14px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .order-meta strong {
+            display: block;
+            margin-top: 6px;
+            color: #333;
+            font-size: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        th, td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            color: #333;
+            font-weight: normal;
+        }
+
+        .goods-info {
+            display: flex;
+            align-items: center;
+            text-align: left;
+        }
+
+        .goods-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 15px;
+            background: #eee;
+            flex: 0 0 auto;
+        }
+
+        .goods-name {
+            word-break: break-all;
+            line-height: 1.5;
+        }
+
+        .price, .subtotal {
+            color: #e1251b;
+            font-weight: bold;
+        }
+
+        .empty-order {
+            text-align: center;
+            padding: 50px 0;
+            color: #999;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            color: #555;
+            font-size: 15px;
+        }
+
+        .summary-row.total {
+            margin-top: 18px;
+            padding-top: 18px;
+            border-top: 1px solid #eee;
+            align-items: center;
+        }
+
+        .total-price {
+            color: #e1251b;
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: #e1251b;
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 4px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 16px;
+        }
+
+        .btn-submit:hover {
+            background: #c81623;
+        }
+
+        .btn-submit:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-back {
+            width: 100%;
+            color: #666;
+            background: #eee;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-back:hover {
+            background: #ddd;
+        }
+
+        .tips {
+            margin-top: 12px;
+            color: #999;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                padding: 20px;
+            }
+
+            .order-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid,
+            .order-meta {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div class="header">
+        <h2>订单详情</h2>
+        <div class="nav-links">
+            <a href="index.html">返回首页</a>
+            <a href="cart.html">返回购物车</a>
+            <span v-if="isLogin" style="color: #666; font-size: 14px; margin-left: 15px;">欢迎，{{ user.nickname
+                }}</span>
+            <a href="#" v-if="isLogin" @click.prevent="logout" style="color: #999; font-size: 14px;">退出</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="order-layout">
+            <div>
+                <div class="order-card">
+                    <h3 class="section-title">收货人信息</h3>
+                    <div class="form-grid">
+                        <div class="form-item">
+                            <label><span class="required">*</span>收货人</label>
+                            <input type="text" v-model.trim="receiver.name" placeholder="请输入收货人姓名">
+                        </div>
+                        <div class="form-item">
+                            <label><span class="required">*</span>手机号码</label>
+                            <input type="text" v-model.trim="receiver.phone" placeholder="请输入手机号码"
+                                   maxlength="11">
+                        </div>
+                        <div class="form-item full">
+                            <label><span class="required">*</span>所在地区</label>
+                            <input type="text" v-model.trim="receiver.region" placeholder="例如：北京市 朝阳区">
+                        </div>
+                        <div class="form-item full">
+                            <label><span class="required">*</span>详细地址</label>
+                            <textarea v-model.trim="receiver.address"
+                                      placeholder="请输入街道、小区、门牌号等详细信息"></textarea>
+                        </div>
+                        <div class="form-item full">
+                            <label>订单备注</label>
+                            <textarea v-model.trim="receiver.remark" placeholder="选填，请填写配送或商品备注"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-card" style="margin-top: 20px;">
+                    <h3 class="section-title">订单商品</h3>
+                    <div class="order-meta">
+                        <div>
+                            订单编号
+                            <strong>{{ orderNo }}</strong>
+                        </div>
+                        <div>
+                            下单用户
+                            <strong>{{ user.nickname || user.username || '当前用户' }}</strong>
+                        </div>
+                        <div>
+                            下单时间
+                            <strong>{{ orderTime }}</strong>
+                        </div>
+                    </div>
+
+                    <div v-if="cartList.length === 0" class="empty-order">
+                        <h3>暂无可结算商品</h3>
+                        <a href="cart.html" style="color: #007bff; text-decoration: none;">返回购物车</a>
+                    </div>
+
+                    <table v-else>
+                        <thead>
+                        <tr>
+                            <th width="46%">商品信息</th>
+                            <th width="18%">单价</th>
+                            <th width="16%">数量</th>
+                            <th width="20%">小计</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="item in cartList" :key="item.goodsId">
+                            <td>
+                                <div class="goods-info">
+                                    <img :src="item.picture || 'https://via.placeholder.com/80?text=No+Img'"
+                                         class="goods-img" alt="商品">
+                                    <span class="goods-name">{{ item.goodsName }}</span>
+                                </div>
+                            </td>
+                            <td class="price">￥ {{ Number(item.price).toFixed(2) }}</td>
+                            <td>{{ item.number }}</td>
+                            <td class="subtotal">￥ {{ (item.price * item.number).toFixed(2) }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="order-card">
+                <h3 class="section-title">订单汇总</h3>
+                <div class="summary-row">
+                    <span>商品件数</span>
+                    <span>{{ totalCount }} 件</span>
+                </div>
+                <div class="summary-row">
+                    <span>商品总价</span>
+                    <span>￥ {{ totalPrice }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>运费</span>
+                    <span>￥ {{ freight }}</span>
+                </div>
+                <div class="summary-row total">
+                    <span>应付金额</span>
+                    <span class="total-price">￥ {{ payAmount }}</span>
+                </div>
+                <button class="btn-submit" :disabled="cartList.length === 0 || submitting" @click="submitOrder">
+                    {{ submitting ? '提交中...' : '提交订单' }}
+                </button>
+                <button class="btn-back" @click="goCart">返回购物车修改</button>
+                <div class="tips">
+                    提交前请确认收货信息和商品明细。当前页面先完成订单信息确认，后续可对接后端下单接口。
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/vue.min.js"></script>
+<script src="js/axios.min.js"></script>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            isLogin: false,
+            user: {},
+            token: '',
+            cartList: [],
+            orderNo: '',
+            orderTime: '',
+            submitting: false,
+            receiver: {
+                name: '',
+                phone: '',
+                region: '',
+                address: '',
+                remark: ''
+            }
+        },
+        computed: {
+            totalPrice() {
+                let total = 0;
+                this.cartList.forEach(item => {
+                    total += item.price * item.number;
+                });
+                return total.toFixed(2);
+            },
+            totalCount() {
+                let count = 0;
+                this.cartList.forEach(item => {
+                    count += item.number;
+                });
+                return count;
+            },
+            freight() {
+                return '0.00';
+            },
+            payAmount() {
+                return (Number(this.totalPrice) + Number(this.freight)).toFixed(2);
+            }
+        },
+        created() {
+            // 页面初始化时生成一个前端展示用订单号和下单时间，然后检查登录状态。
+            this.orderNo = this.createOrderNo();
+            this.orderTime = this.formatDate(new Date());
+            this.checkLogin();
+        },
+        methods: {
+            // 检查本地登录状态。
+            // 有 token 和 user 才允许进入订单页，否则跳转到登录页。
+            checkLogin() {
+                let token = localStorage.getItem('token');
+                let userStr = localStorage.getItem('user');
+                if (!token || !userStr) {
+                    alert('请先登录后确认订单！');
+                    location.href = 'login.html';
+                    return;
+                }
+                this.token = token;
+                this.user = JSON.parse(userStr);
+                this.isLogin = true;
+                this.loadCart();
+            },
+            // 加载当前用户购物车。
+            // 订单商品明细、商品件数、商品总价都依赖这个接口返回的数据。
+            loadCart() {
+                axios.get('http://localhost:8080/carts/find', {
+                    params: {userId: this.user.id},
+                    headers: {
+                        'Authorization': 'Bearer ' + this.token,
+                        'token': this.token
+                    }
+                }).then(resp => {
+                    if (resp.data && resp.data.success) {
+                        this.cartList = resp.data.data || [];
+                    } else {
+                        this.cartList = [];
+                        alert(resp.data && resp.data.error ? resp.data.error : '获取购物车失败');
+                    }
+                }).catch(err => {
+                    console.error('获取购物车失败', err);
+                    alert('获取购物车失败，请稍后重试');
+                });
+            },
+            // 提交订单。
+            // 这个函数会把收货人、手机号、地址提交给后端 /orders/save。
+            // 后端保存订单后发送 RocketMQ 事务消息，库存监听器收到消息后会按购物车数量扣减库存。
+            submitOrder() {
+                if (!this.validateReceiver()) {
+                    return;
+                }
+                if (this.cartList.length === 0) {
+                    alert('购物车为空，不能提交订单');
+                    return;
+                }
+                if (this.submitting) {
+                    return;
+                }
+                this.submitting = true;
+
+                let orderInfo = {
+                    orderNo: this.orderNo,
+                    orderTime: this.orderTime,
+                    userId: this.user.id,
+                    receiver: this.receiver,
+                    goodsList: this.cartList,
+                    totalCount: this.totalCount,
+                    totalPrice: this.totalPrice,
+                    freight: this.freight,
+                    payAmount: this.payAmount
+                };
+
+                let data = new URLSearchParams();
+                data.append('nickname', this.receiver.name);
+                data.append('phone', this.receiver.phone);
+                data.append('address', this.receiver.region + ' ' + this.receiver.address);
+
+                axios.post('http://localhost:8080/orders/save', data, {
+                    headers: {
+                        'Authorization': 'Bearer ' + this.token,
+                        'token': this.token
+                    }
+                }).then(resp => {
+                    if (resp.data && resp.data.success) {
+                        localStorage.setItem('lastOrder', JSON.stringify(orderInfo));
+                        alert('订单提交成功，应付金额：￥' + this.payAmount + '，商品库存已进入扣减流程');
+                        location.href = 'index.html';
+                    } else {
+                        alert(resp.data && resp.data.error ? resp.data.error : '提交订单失败');
+                    }
+                }).catch(err => {
+                    console.error('提交订单失败', err);
+                    alert('提交订单失败，请稍后重试');
+                }).finally(() => {
+                    this.submitting = false;
+                });
+            },
+            // 校验收货信息是否填写完整。
+            // 这里是前端基础校验，主要防止空姓名、错误手机号、空地区或空地址提交到后端。
+            validateReceiver() {
+                if (!this.receiver.name) {
+                    alert('请输入收货人姓名');
+                    return false;
+                }
+                if (!/^1[3-9]\d{9}$/.test(this.receiver.phone)) {
+                    alert('请输入正确的手机号码');
+                    return false;
+                }
+                if (!this.receiver.region) {
+                    alert('请输入所在地区');
+                    return false;
+                }
+                if (!this.receiver.address) {
+                    alert('请输入详细地址');
+                    return false;
+                }
+                return true;
+            },
+            // 生成前端展示用订单号。
+            // 规则：DD + 年月日 + 时分秒 + 4 位随机数，例如 DD202606121530451234。
+            // 注意：数据库里真正的订单 id 由后端 SnowFlakeGenerateIdWorker 生成，这个 orderNo 只用于页面展示和本地缓存。
+            createOrderNo() {
+                let now = new Date();
+                // 把 1 位数字补成 2 位，例如 6 会变成 06。
+                let pad = num => String(num).padStart(2, '0');
+                let date = '' + now.getFullYear() + pad(now.getMonth() + 1) + pad(now.getDate());
+                let time = '' + pad(now.getHours()) + pad(now.getMinutes()) + pad(now.getSeconds());
+                // 生成 1000 到 9999 之间的随机数，降低同一秒内订单号重复概率。
+                let random = Math.floor(Math.random() * 9000 + 1000);
+                return 'DD' + date + time + random;
+            },
+            // 格式化日期。
+            // 把 Date 对象转换成 yyyy-MM-dd HH:mm:ss，方便直接显示在订单页面。
+            formatDate(date) {
+                let pad = num => String(num).padStart(2, '0');
+                return date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate()) +
+                    ' ' + pad(date.getHours()) + ':' + pad(date.getMinutes()) + ':' + pad(date.getSeconds());
+            },
+            // 返回购物车页面，用户可以继续修改商品数量。
+            goCart() {
+                location.href = 'cart.html';
+            },
+            // 退出登录。
+            // 清理本地保存的 token 和用户信息，再跳回首页。
+            logout() {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                this.token = '';
+                this.user = {};
+                this.isLogin = false;
+                location.href = 'index.html';
+            }
+        }
+    });
+</script>
+</body>
+</html>

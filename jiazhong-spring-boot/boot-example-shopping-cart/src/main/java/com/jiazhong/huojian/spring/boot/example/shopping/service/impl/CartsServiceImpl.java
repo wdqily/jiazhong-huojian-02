@@ -130,15 +130,15 @@ public class CartsServiceImpl extends ServiceImpl<CartsMapper, Carts> implements
     }
 
     @Override
-    public JsonResult deleteCartsByBookId(String userId, String... bookId) {
-        if (userId == null || bookId == null || bookId.length == 0) {
+    public JsonResult deleteCartsByBookId(String userId, String... goodsId) {
+        if (userId == null || goodsId == null || goodsId.length == 0) {
             return ResultTool.fail(500, "参数不能为空");
         }
         List<String> range = forlist.range(prefix_key + userId, 0, -1);
         if (range == null || range.isEmpty()) {
             return ResultTool.fail(500, "购物车为空");
         }
-        List<String> bookIds = Arrays.asList(bookId);//转为集合
+        List<String> bookIds = Arrays.asList(goodsId);//转为集合
        /* stringRedisTemplate.delete(prefix_key + userId);
         boolean deleted = false;
         for (String s : range) {

@@ -17,7 +17,7 @@ public interface CartsService extends IService<Carts> {
     JsonResult deleteCartsByUserId(String userID);
 
     //删除
-    JsonResult deleteCartsByBookId(String userId, String... bookId);
+    JsonResult deleteCartsByBookId(String userId, String... goodsId);
 
     //更改数量
     JsonResult updateCartsNumber(String userId, String goodsId, Integer number);
