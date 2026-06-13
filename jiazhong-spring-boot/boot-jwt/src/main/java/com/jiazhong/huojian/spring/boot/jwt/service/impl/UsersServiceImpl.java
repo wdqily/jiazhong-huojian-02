@@ -3,8 +3,11 @@ package com.jiazhong.huojian.spring.boot.jwt.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jiazhong.huojian.commons.JsonResult;
+import com.jiazhong.huojian.commons.ResultTool;
 import com.jiazhong.huojian.spring.boot.jwt.bean.Users;
 import com.jiazhong.huojian.spring.boot.jwt.config.JwtConfig;
+import com.jiazhong.huojian.spring.boot.jwt.handler.UserLoginException;
 import com.jiazhong.huojian.spring.boot.jwt.mapper.UsersMapper;
 import com.jiazhong.huojian.spring.boot.jwt.service.UsersService;
 import com.jiazhong.huojian.spring.boot.jwt.util.Md5UtilHandler;
@@ -35,6 +38,26 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         stringRedisTemplate.opsForValue().set("tokrn:" + one.getId(), token);
         //5.返回
         return token;
+    }
+
+    @Override
+    public JsonResult login2(Users users) {
+        QueryWrapper<Users> wrapper = new QueryWrapper<>();
+        wrapper.eq("username", users.getUsername());
+        wrapper.eq("password", Md5UtilHandler.encryptMD5(users.getPassword()));
+        Users one = getOne(wrapper);
+        //1.判断用户登录是否成功
+        if (one == null) {
+            //2,如果失败，抛异常
+            throw new UserLoginException("账号或密码错误");
+//            return "error";
+        }
+        //3.如果成功，将对象转换成jwt字符串
+        String token = JwtConfig.getJwtToken(one);
+        //4.保存在redis中
+        stringRedisTemplate.opsForValue().set("tokrn:" + one.getId(), token);
+        //5.返回
+        return ResultTool.success(token);
     }
 
     @Override
