@@ -49,7 +49,7 @@ public class SeckillServiceImpl implements SeckillService {
         log.info("ip:{}", ip);
         //数据校验
         //1.时间是否到了
-        Date seckillDate = new Date(126, Calendar.JUNE, 14, 11, 55, 0);
+        Date seckillDate = new Date(126, Calendar.JUNE, 15, 17, 24, 0);
         if (new Date().before(seckillDate)) {
             throw new SeckillNotBeginException("还没到秒杀时间");
         }
@@ -63,18 +63,19 @@ public class SeckillServiceImpl implements SeckillService {
         if ("0".equals(stockNumber.toString())) {
             throw new SeckillStockIsZeroException("活动已结束");
         }
-        final Object[] goods = new Object[1];
-        //开始监控
-        stringRedisTemplate.watch(stock_key);
+//        final Object[] goods = new Object[1];
+        //stringRedisTemplate.watch(stock_key);
         SessionCallback<List<Object>> sessionCallback = new SessionCallback() {
             @Nullable
             @Override
             public List<Object> execute(RedisOperations operations) throws DataAccessException {
+                //开始监控
+                operations.watch(stock_key);//监控正确的库存 key
                 stringRedisTemplate.multi();
                 //库存-1
                 forValue.decrement(stock_key);
                 //取出商品
-                forList.rightPop(goods_list_key);
+                forList.rightPop(goods_list_key);//因为事务开启，会在队列里排队 拿不到商品
                 //加入购物记录
                 forList.rightPush(goods_buy_key, ip);
                 return stringRedisTemplate.exec();
@@ -82,11 +83,13 @@ public class SeckillServiceImpl implements SeckillService {
         };
         //实际执行
         List<Object> execute = stringRedisTemplate.execute(sessionCallback);
+        Object o = execute.get(1);//拿到商品，0所对应是decrement后的库存
+        log.info("o:{}", o);
         log.info("execute:{}", execute);
         if (execute.get(1) == null) {
             throw new SeckillStockIsZeroException("秒杀失败");
         }
-        return ResultTool.success(goods[0]);
+        return ResultTool.success(o);
     }
 }
 
