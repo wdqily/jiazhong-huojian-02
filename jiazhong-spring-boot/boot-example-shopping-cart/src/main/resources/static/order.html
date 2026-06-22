@@ -514,7 +514,9 @@
                     if (resp.data && resp.data.success) {
                         localStorage.setItem('lastOrder', JSON.stringify(orderInfo));
                         alert('订单提交成功，应付金额：￥' + this.payAmount + '，商品库存已进入扣减流程');
-                        location.href = 'index.html';
+                        let orderId = resp.data.data;
+                        window.location.href = "http://localhost:8080/alipay/pay?orderId=" + orderId;
+                        // location.href = 'index.html';
                     } else {
                         alert(resp.data && resp.data.error ? resp.data.error : '提交订单失败');
                     }
