@@ -13,6 +13,6 @@ public class Logistics implements Serializable {
     private String address;
     private String phone;
     private String orderId;
-    private String creatTime;
+    private String createTime;
     private Integer state;
 }
